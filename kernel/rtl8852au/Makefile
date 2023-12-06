@@ -14,7 +14,6 @@ PKG_SOURCE_VERSION:=70bdde265b9ab002daf11d4bea1a42baa8da4325
 
 PKG_MAINTAINER:=Andriy Utkin <hello@autkin.net>
 PKG_BUILD_PARALLEL:=1
-PKG_EXTMOD_SUBDIRS:=rtl8852au
 
 include $(INCLUDE_DIR)/kernel.mk
 include $(INCLUDE_DIR)/package.mk
@@ -46,8 +45,8 @@ define Build/Compile
 	+$(KERNEL_MAKE) $(PKG_JOBS) \
 		M="$(PKG_BUILD_DIR)" \
 		NOSTDINC_FLAGS="$(NOSTDINC_FLAGS)" \
+		CONFIG_RTL8852AU=m \
 		modules
 endef
-
 
 $(eval $(call KernelPackage,rtl8852au))

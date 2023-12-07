@@ -22,7 +22,7 @@ define KernelPackage/rtl8852au
   SUBMENU:=Wireless Drivers
   TITLE:=The driver supports rtl8832au/rtl8852au chipsets
   DEPENDS:=+kmod-cfg80211 +kmod-usb-core +@DRIVER_11AC_SUPPORT  
-  FILES:=$(PKG_BUILD_DIR)/rtl8852au.ko
+  FILES:=$(PKG_BUILD_DIR)/8852au.ko
   AUTOLOAD:=$(call AutoProbe,rtl8852au)
   PROVIDES:=kmod-rtl8852au
 endef

@@ -27,26 +27,51 @@ define KernelPackage/rtl8852au
   PROVIDES:=kmod-rtl8852au
 endef
 
-NOSTDINC_FLAGS := \
-	$(KERNEL_NOSTDINC_FLAGS) \
-	-I$(PKG_BUILD_DIR) \
-	-I$(PKG_BUILD_DIR)/include \
-	-I$(STAGING_DIR)/usr/include/mac80211-backport \
-	-I$(STAGING_DIR)/usr/include/mac80211-backport/uapi \
-	-I$(STAGING_DIR)/usr/include/mac80211 \
-	-I$(STAGING_DIR)/usr/include/mac80211/uapi \
-	-include backport/backport.h \
-	-Wno-error=address \
-	-Wno-error=stringop-overread
+#NOSTDINC_FLAGS := \
+#	$(KERNEL_NOSTDINC_FLAGS) \
+#	-I$(STAGING_DIR)/usr/include/mac80211-backport \
+#	-I$(STAGING_DIR)/usr/include/mac80211-backport/uapi \
+#	-I$(STAGING_DIR)/usr/include/mac80211 \
+#	-I$(STAGING_DIR)/usr/include/mac80211/uapi \
+#	-I$(STAGING_DIR)/bpf-headers/include/ \
+#	-I$(TOOLCHAIN_ROOT_DIR)/include/ \
+#	-I$(LINUX_DIR)/include/ \
+#	-I$(PKG_BUILD_DIR)/include \
+#	-include backport/backport.h \
+#	-Wno-error=address \
+#	-Wno-error=stringop-overread
+
+#NOSTDINC_FLAGS := \
+#	$(KERNEL_NOSTDINC_FLAGS) \
+#	-I$(TOOLCHAIN_ROOT_DIR)/include/ \
+#	-I$(LINUX_DIR)/include/ \
+#	-I$(PKG_BUILD_DIR)/include \
+#	-include ./include/generated/autoconf.h \
+#	-Wno-error=address \
+#	-Wno-error=stringop-overread
+#	#-include backport/backport.h \
+
+#build_dir/target-aarch64_cortex-a72_musl/linux-bcm27xx_bcm2711/linux-6.1.64/arch/arm64/include/generated
 
 NOSTDINC_FLAGS+=-DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT -DBUILD_OPENWRT
 
 define Build/Compile
 	+$(KERNEL_MAKE) $(PKG_JOBS) \
 		M="$(PKG_BUILD_DIR)" \
-		NOSTDINC_FLAGS="$(NOSTDINC_FLAGS)" \
+		NOSTDINC_FLAGS="$(KERNEL_NOSTDINC_FLAGS) -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT -DBUILD_OPENWRT" \
+		-I$(KERNEL_BUILD_DIR)/include \
 		CONFIG_RTL8852AU=m \
 		modules
 endef
+		# NOSTDINC_FLAGS="$(NOSTDINC_FLAGS)" \
 
+#define Build/Compile
+#	+$(MAKE) \
+#		-C "$(PKG_BUILD_DIR)" \
+#		$(KERNEL_MAKE_FLAGS) \
+#		KSRC="$(LINUX_DIR)" \
+#		src="$(PKG_BUILD_DIR)" \
+#		NOSTDINC_FLAGS="$(NOSTDINC_FLAGS)" \
+#		modules
+#endef
 $(eval $(call KernelPackage,rtl8852au))
